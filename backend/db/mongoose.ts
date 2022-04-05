@@ -14,7 +14,7 @@ try {
 			() => {
 				console.log('DB connected')
 			},
-			(err) => {
+			(err: any) => {
 				console.error('DB connection error', err)
 			}
 		)
