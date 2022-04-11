@@ -1,8 +1,9 @@
+export {};
 const router = require('express').Router()
 const User = require('../model/User')
 
 //LOGOUT
-router.get('/', async (req, res) => {
+router.get('/', async (req: any, res: any) => {
 	const cookies = req.cookies
 	console.log(req.cookies)
 	if (!cookies?.jwt) return res.status(204).send('No content')

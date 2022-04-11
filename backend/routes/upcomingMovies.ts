@@ -1,10 +1,11 @@
+export{};
 const router = require('express').Router()
 const Movie = require('../model/Movie');
 const cors = require("cors");
 
 const currentYear = new Date().getFullYear()  // returns the current year
 
-router.get('/upcoming', cors(), async (req, res) => {
+router.get('/upcoming', cors(), async (req: any, res: any) => {
     const filter = { year: { $gte: currentYear } };
     const allUpcoming = await Movie.find(filter);
 

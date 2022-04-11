@@ -1,6 +1,7 @@
+export{};
 const User = require('../model/User')
 
-module.exports = async (req, res, next) => {
+module.exports = async (req: any, res: any, next: any) => {
 	const user = await User.findOne({ email: req.body.email })
 
 	if (user.roles.Admin !== 'Admin') res.status(400).send('Access Denied')

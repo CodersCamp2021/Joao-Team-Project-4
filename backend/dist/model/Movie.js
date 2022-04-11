@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require('mongoose');
 const movieSchema = new mongoose.Schema({
     title: String,

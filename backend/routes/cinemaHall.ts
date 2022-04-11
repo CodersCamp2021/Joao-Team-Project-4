@@ -1,3 +1,4 @@
+export{};
 const route = require('express').Router()
 const CinemaHall = require('../model/CinemaHall')
 const verifyToken = require('../middleware/verifyToken')
@@ -8,7 +9,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const corsOptions = require('../config/corsOptions')
 
-const isNumberOk = (number) => {
+const isNumberOk = (number: number) => {
     if(number < 1) return false
     if(number > 200) return false
     if(!Number.isInteger(number)) return false
@@ -17,7 +18,7 @@ const isNumberOk = (number) => {
 
 route.use(cors(corsOptions))
 
-route.post('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
+route.post('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
     if(!isNumberOk(req.body.cols)) return res.status(400).send("Bad request - /cinema-hall POST - cols")
     if(!isNumberOk(req.body.rows)) return res.status(400).send("Bad request - /cinema-hall POST - rows")
     
@@ -33,11 +34,11 @@ route.post('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (re
         return res.status(201).json({savedCinemaHall})
     } catch (e) {
         console.error('server error - /cinema-hall POST')
-        return res.status(500).send/('Error while saving cinema hall.')
+        return res.status(500).send('Error while saving cinema hall.')
     }
 })
 
-route.get('/cinema-halls/:cinemaId', async (req, res) => {
+route.get('/cinema-halls/:cinemaId', async (req: any, res: any) => {
     const _cinemaId = req.params.cinemaId
 
     if(!mongoose.Types.ObjectId.isValid(_cinemaId)) {
@@ -45,7 +46,7 @@ route.get('/cinema-halls/:cinemaId', async (req, res) => {
     }
     CinemaHall.find({
         cinemaId: _cinemaId
-    }, (err, docs) => {
+    }, (err: any, docs: any) => {
         if(err) {
             return res.status(500).send("server error - /cinema-hall GET")
         }
@@ -53,7 +54,7 @@ route.get('/cinema-halls/:cinemaId', async (req, res) => {
     })
 })
 
-route.get('/cinema-hall/:cinemaHallId', async (req, res) => {
+route.get('/cinema-hall/:cinemaHallId', async (req: any, res: any) => {
     const _cinemaHallId = req.params.cinemaHallId
 
     if(!mongoose.Types.ObjectId.isValid(_cinemaHallId)) {
@@ -61,7 +62,7 @@ route.get('/cinema-hall/:cinemaHallId', async (req, res) => {
     }
     CinemaHall.findById({
         _id: _cinemaHallId
-    }, (err, docs) => {
+    }, (err: any, docs: any) => {
         if(err) {
             return res.status(500).send("server error - /cinema-hall GET")
         }
@@ -69,14 +70,14 @@ route.get('/cinema-hall/:cinemaHallId', async (req, res) => {
     })
 })
 
-route.put('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
+route.put('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
     if(!isNumberOk(req.body.newCinemaHall.cols)) return res.status(400).send("Bad request - /cinema-hall PUT - cols")
     if(!isNumberOk(req.body.newCinemaHall.rows)) return res.status(400).send("Bad request - /cinema-hall PUT - rows")
     await CinemaHall.findByIdAndUpdate(
         req.body.id,
         {...req.body.newCinemaHall},
         { new: true },
-        (err, docs) => {
+        (err: any, docs: any) => {
             if(err) {
                 return res.status(500)
                     .send('server error - /cinema-hall PUT')
@@ -86,10 +87,10 @@ route.put('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req
     )
 })
 
-route.delete('/cinema-hall/:cinemaHallId', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
+route.delete('/cinema-hall/:cinemaHallId', verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
     CinemaHall.findByIdAndDelete(
         mongoose.Types.ObjectId(req.params.cinemaHallId),
-        (err, docs) => {
+        (err: any, docs: any) => {
             if (err) {
                 return res
                     .status(500)

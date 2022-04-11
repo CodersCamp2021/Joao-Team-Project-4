@@ -1,10 +1,11 @@
+export {};
 const router = require('express').Router();
 const Movie = require('../model/Movie');
 const cors = require("cors");
 const corsOptions = require('../config/corsOptions');
 const mongoose = require('mongoose');
 
-router.get('/:id', cors(corsOptions), (req, res) => {
+router.get('/:id', cors(corsOptions), (req: any, res: any) => {
     const _id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
@@ -12,7 +13,7 @@ router.get('/:id', cors(corsOptions), (req, res) => {
         return;
     }
 
-    Movie.findOne({ _id: _id }, (err, docs) => {
+    Movie.findOne({ _id: _id }, (err: any, docs: any) => {
         if (err) {
             return res.status(500).send("server error - /movie GET")
         }

@@ -1,8 +1,9 @@
+export{};
 const router = require('express').Router()
 const User = require('../model/User')
 const jwt = require('jsonwebtoken')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: any, res: any) => {
 	const cookies = req.cookies
 	console.log(cookies)
 	if (!cookies?.jwt) return res.sendStatus(401)
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
 	const foundUser = await User.findOne({ refreshToken }).exec()
 	if (!foundUser) return res.status(403).send('No user in DB') //Forbidden
 	// evaluate jwt
-	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err) => {
+	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err: any) => {
 		if (err) return res.sendStatus(403)
 
 		const roles = Object.values(foundUser.roles)

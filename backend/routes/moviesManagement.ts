@@ -1,3 +1,4 @@
+export {};
 const router = require('express').Router();
 const Movie = require('../model/Movie');
 const verifyToken = require('../middleware/verifyToken');
@@ -8,8 +9,8 @@ const corsOptions = require('../config/corsOptions');
 router.use(cors(corsOptions));
 
 //Display all movies
-router.get('/', cors(corsOptions), verifyToken, (req, res) => {
-    Movie.find({}, (err, docs) => {
+router.get('/', cors(corsOptions), verifyToken, (req: any, res: any) => {
+    Movie.find({}, (err: any, docs: any) => {
         if (err) {
             return res.status(500).send("server error - /movies GET")
         }
@@ -18,7 +19,7 @@ router.get('/', cors(corsOptions), verifyToken, (req, res) => {
 });
 
 //Adding new movie
-router.post('/new', cors(corsOptions), verifyToken, async (req, res) => {
+router.post('/new', cors(corsOptions), verifyToken, async (req: any, res: any) => {
     const movie = new Movie({
         title: req.body.title,
         year: req.body.year,
@@ -40,14 +41,14 @@ router.post('/new', cors(corsOptions), verifyToken, async (req, res) => {
 });
 
 
-router.delete("/:id", cors(corsOptions), verifyToken, async (req, res) => {
+router.delete("/:id", cors(corsOptions), verifyToken, async (req: any, res: any) => {
     const _id = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(_id)) {
         res.status(400).send("Invalid params");
         return;
     }
 
-    Movie.findOneAndDelete({ _id: _id }, function (err) {
+    Movie.findOneAndDelete({ _id: _id }, function (err: any) {
         if (err) {
             return res.status(500).send("server error while deleting movie - /movies DELETE", err);
         }

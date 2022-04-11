@@ -1,3 +1,4 @@
+export{};
 const route = require('express').Router()
 const Screening = require('../model/Screening')
 const Movie = require('../model/Movie')
@@ -18,7 +19,7 @@ const endOfDay = (date) => {
 const cors = require("cors");
 const corsOptions = require('../config/corsOptions');
 
-const stringToTimeTouple = (string) => {
+const stringToTimeTouple = (string: string) => {
     return string.slice(0,-1).split("h").map(e=>(e-0))
 }
 
@@ -33,7 +34,7 @@ route.use(cors(corsOptions));
 
 route.post('/screening', cors(corsOptions), 
 verifyToken, verifyRoles(ROLES_LIST.Admin), 
-async (req, res) => {
+async (req: any, res: any) => {
 
     const screening = await new Screening({
         cinemaId: req.body.cinemaId,
@@ -178,7 +179,7 @@ async (req, res) => {
         return res.status(201).json({savedScreening})
     } catch (e) {
         console.error('server error - /screening POST')
-        return res.status(500).send/('Error while saving cinema hall.')
+        return res.status(500).send('Error while saving cinema hall.')
     }
 })
 
@@ -200,7 +201,7 @@ async (req, res) => {
 })
 
 route.get('/screenings/hall/:cinemaHallId/:screeningDate', cors(corsOptions),
-async (req, res) => {
+async (req: any, res: any) => {
     const day = new Date(req.params.screeningDate)
 
     Screening.find({
@@ -212,7 +213,7 @@ async (req, res) => {
         },
         null,
         {sort: {screeningDate: 1}},
-		(err, docs) => {
+		(err: any, docs: any) => {
 			if (err) {
 				console.error(err)
 				return res
@@ -225,11 +226,11 @@ async (req, res) => {
 })
 
 route.get('/screenings/movie/:movieId', cors(corsOptions), 
-async (req, res) => {
+async (req: any, res: any) => {
     Screening.find({
 		    movieId: mongoose.Types.ObjectId(req.params.movieId),
         },
-		(err, docs) => {
+		(err: any, docs: any) => {
 			if (err) {
 				console.error(err)
 				return res

@@ -1,10 +1,11 @@
+export{};
 const router = require('express').Router()
 const User = require('../model/User')
 const bcrypt = require('bcryptjs')
 const { registerValidation } = require('../validation')
 
 //REGISTER
-router.post('/', async (req, res) => {
+router.post('/', async (req: any, res: any) => {
 	//validate the data
 	const { error } = registerValidation(req.body)
 	if (error) return res.status(400).send(error.details[0].message)

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const route = require('express').Router();
 const Screening = require('../model/Screening');
 const Movie = require('../model/Movie');
@@ -161,7 +162,7 @@ route.post('/screening', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.
     }
     catch (e) {
         console.error('server error - /screening POST');
-        return res.status(500).send / ('Error while saving cinema hall.');
+        return res.status(500).send('Error while saving cinema hall.');
     }
 }));
 route.delete('/screening/:screeningId', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
