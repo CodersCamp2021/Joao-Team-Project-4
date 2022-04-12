@@ -1,6 +1,7 @@
-const router = require('express').Router()
-const User = require('../model/User')
-const jwt = require('jsonwebtoken')
+import * as express from 'express'
+let router = express.Router()
+import User from '../model/User'
+import jwt from 'jsonwebtoken'
 
 router.get('/', async (req, res) => {
 	const cookies = req.cookies
@@ -12,23 +13,27 @@ router.get('/', async (req, res) => {
 	const foundUser = await User.findOne({ refreshToken }).exec()
 	if (!foundUser) return res.status(403).send('No user in DB') //Forbidden
 	// evaluate jwt
-	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err) => {
-		if (err) return res.sendStatus(403)
+	jwt.verify(
+		refreshToken,
+		process.env.REFRESH_TOKEN_SECRET as string,
+		(err: any) => {
+			if (err) return res.sendStatus(403)
 
-		const roles = Object.values(foundUser.roles)
-		const accessToken = jwt.sign(
-			{
-				user_details: {
-					email: foundUser.email,
-					roles: roles,
+			const roles = Object.values(foundUser.roles)
+			const accessToken = jwt.sign(
+				{
+					user_details: {
+						email: foundUser.email,
+						roles: roles,
+					},
 				},
-			},
-			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: '30s' }
-		)
+				process.env.ACCESS_TOKEN_SECRET as string,
+				{ expiresIn: '30s' }
+			)
 
-		res.json({ accessToken })
-	})
+			res.json({ accessToken })
+		}
+	)
 })
 
-module.exports = router
+export default router

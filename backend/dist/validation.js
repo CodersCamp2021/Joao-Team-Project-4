@@ -1,9 +1,10 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.loginValidation = exports.registerValidation = void 0;
 //VALIDATION
 const Joi = require('@hapi/joi');
 //register validation
-const registerValidation;
-(data) => {
+const registerValidation = (data) => {
     const schema = {
         name: Joi.string().min(3).required(),
         email: Joi.string().min(6).required().email(),
@@ -11,6 +12,7 @@ const registerValidation;
     };
     return Joi.validate(data, schema);
 };
+exports.registerValidation = registerValidation;
 //login validation
 const loginValidation = (data) => {
     const schema = {
@@ -19,5 +21,4 @@ const loginValidation = (data) => {
     };
     return Joi.validate(data, schema);
 };
-module.exports.registerValidation = registerValidation;
-module.exports.loginValidation = loginValidation;
+exports.loginValidation = loginValidation;

@@ -1,8 +1,9 @@
-const router = require('express').Router()
-const User = require('../model/User')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
-const { loginValidation } = require('../validation')
+import * as express from 'express'
+let router = express.Router()
+import User from '../model/User'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+import { loginValidation } from '../validation'
 
 //LOGIN
 router.post('/', async (req, res) => {
@@ -29,14 +30,14 @@ router.post('/', async (req, res) => {
 				roles: roles,
 			},
 		},
-		process.env.ACCESS_TOKEN_SECRET,
+		process.env.ACCESS_TOKEN_SECRET as any,
 		{ expiresIn: '30s' }
 	)
 
 	//create and assign a refresh token
 	const refreshToken = jwt.sign(
 		{ email: user.email },
-		process.env.REFRESH_TOKEN_SECRET,
+		process.env.REFRESH_TOKEN_SECRET as any,
 		{ expiresIn: '1h' }
 	)
 
@@ -47,7 +48,7 @@ router.post('/', async (req, res) => {
 
 	res.cookie('jwt', refreshToken, {
 		httpOnly: true,
-		sameSite: 'None',
+		sameSite: 'none',
 		maxAge: 24 * 60 * 60 * 1000,
 		secure: true,
 	})

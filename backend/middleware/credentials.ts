@@ -1,11 +1,16 @@
-const allowedOrigins = require('../config/allowedOrigins')
+import allowedOrigins from '../config/allowedOrigins'
+import express from 'express'
 
-const credentials = (req, res, next) => {
+const credentials = (
+	req: express.Request,
+	res: express.Response,
+	next: express.NextFunction
+): void => {
 	const origin = req.headers.origin
-	if (allowedOrigins.includes(origin)) {
-		res.header('Access-Control-Allow-Credentials', true)
+	if (allowedOrigins.includes(origin as string)) {
+		res.header('Access-Control-Allow-Credentials', true as any) // ?
 	}
 	next()
 }
 
-module.exports = credentials
+export default credentials
