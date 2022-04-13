@@ -1,11 +1,12 @@
-export {};
-const router = require('express').Router();
-const Movie = require('../model/Movie');
-const cors = require("cors");
-const corsOptions = require('../config/corsOptions');
-const mongoose = require('mongoose');
+import * as express from 'express'
+import * as mongoose from 'mongoose'
+import Movie from '../model/Movie'
+import cors from 'cors'
+import corsOptions from '../config/corsOptions'
 
-router.get('/:id', cors(corsOptions), (req: any, res: any) => {
+const router = express.Router()
+
+router.get('/:id', cors(corsOptions), (req: express.Request, res: express.Response) => {
     const _id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
@@ -21,4 +22,4 @@ router.get('/:id', cors(corsOptions), (req: any, res: any) => {
     });
 });
 
-module.exports = router
+export default router;

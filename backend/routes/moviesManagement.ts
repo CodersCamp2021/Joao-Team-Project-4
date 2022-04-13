@@ -1,15 +1,16 @@
-export {};
-const router = require('express').Router();
-const Movie = require('../model/Movie');
-const verifyToken = require('../middleware/verifyToken');
-const mongoose = require('mongoose');
-const cors = require("cors");
-const corsOptions = require('../config/corsOptions');
+import * as express from 'express'
+import * as mongoose from 'mongoose'
+import Movie from '../model/Movie'
+import verifyToken from '../middleware/verifyToken'
+import cors from 'cors'
+import corsOptions from '../config/corsOptions'
+
+const router = express.Router();
 
 router.use(cors(corsOptions));
 
 //Display all movies
-router.get('/', cors(corsOptions), verifyToken, (req: any, res: any) => {
+router.get('/', cors(corsOptions), verifyToken, (req: express.Request, res: express.Response) => {
     Movie.find({}, (err: any, docs: any) => {
         if (err) {
             return res.status(500).send("server error - /movies GET")
@@ -19,7 +20,7 @@ router.get('/', cors(corsOptions), verifyToken, (req: any, res: any) => {
 });
 
 //Adding new movie
-router.post('/new', cors(corsOptions), verifyToken, async (req: any, res: any) => {
+router.post('/new', cors(corsOptions), verifyToken, async (req: express.Request, res: express.Response) => {
     const movie = new Movie({
         title: req.body.title,
         year: req.body.year,
@@ -41,7 +42,7 @@ router.post('/new', cors(corsOptions), verifyToken, async (req: any, res: any) =
 });
 
 
-router.delete("/:id", cors(corsOptions), verifyToken, async (req: any, res: any) => {
+router.delete("/:id", cors(corsOptions), verifyToken, async (req: express.Request, res: express.Response) => {
     const _id = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(_id)) {
         res.status(400).send("Invalid params");
@@ -50,7 +51,7 @@ router.delete("/:id", cors(corsOptions), verifyToken, async (req: any, res: any)
 
     Movie.findOneAndDelete({ _id: _id }, function (err: any) {
         if (err) {
-            return res.status(500).send("server error while deleting movie - /movies DELETE", err);
+            return res.status(500).send("server error while deleting movie - /movies DELETE" + err);
         }
         else {
             return res.status(200).send("Successfully deleted");
@@ -59,4 +60,4 @@ router.delete("/:id", cors(corsOptions), verifyToken, async (req: any, res: any)
 
 });
 
-module.exports = router
+export default router;
