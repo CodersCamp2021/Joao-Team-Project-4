@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const allowedOrigins = require('./allowedOrigins');
 const corsOptions = {
     origin: (origin, callback) => {

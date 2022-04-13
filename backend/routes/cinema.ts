@@ -1,4 +1,3 @@
-export {};
 const route = require('express').Router()
 const Cinema = require('../model/Cinema')
 const verifyToken = require('../middleware/verifyToken')
@@ -11,7 +10,7 @@ const corsOptions = require('../config/corsOptions');
 
 route.use(cors(corsOptions));
 
-route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
+route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
 	const cinema = new Cinema({
 		country: req.body.country,
 		city: req.body.city,
@@ -57,8 +56,8 @@ route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Adm
 	}
 })
 
-route.get('/cinemas', async (req: any, res: any) => {
-	Cinema.find({}, (err: any, docs: any) => {
+route.get('/cinemas', async (req, res) => {
+	Cinema.find({}, (err, docs) => {
 		if (err) {
 			return res.status(500).send('server error - /cinemas GET')
 		}
@@ -66,12 +65,12 @@ route.get('/cinemas', async (req: any, res: any) => {
 	})
 })
 
-route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
+route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
 	Cinema.findByIdAndUpdate(
 		req.body.id,
 		{ ...req.body.newCinema },
 		{ new: true },
-		(err: any, docs: any) => {
+		(err, docs) => {
 			if (err) {
 				return res
 					.status(400)
@@ -82,10 +81,10 @@ route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admi
 	)
 })
 
-route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req: any, res: any) => {
+route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
 	Cinema.findByIdAndDelete(
 		mongoose.Types.ObjectId(req.params.id),
-		(err: any, docs: any) => {
+		(err, docs) => {
 			if (err) {
 				console.error(err)
 				return res

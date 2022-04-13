@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const User = require('../model/User');
 const ROLES_LIST = require('../config/roles_list');

@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const route = require('express').Router();
 const CinemaHall = require('../model/CinemaHall');
 const verifyToken = require('../middleware/verifyToken');
@@ -44,7 +43,7 @@ route.post('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), (req, res
     }
     catch (e) {
         console.error('server error - /cinema-hall POST');
-        return res.status(500).send('Error while saving cinema hall.');
+        return res.status(500).send / ('Error while saving cinema hall.');
     }
 }));
 route.get('/cinema-halls/:cinemaId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

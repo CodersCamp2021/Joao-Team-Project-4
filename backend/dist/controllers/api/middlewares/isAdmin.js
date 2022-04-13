@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const User = require('../../../model/User');
 module.exports = function (req, res, next) {
     User.findById(req.user._id, (err, user) => {

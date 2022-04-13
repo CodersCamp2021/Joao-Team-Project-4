@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const allowedOrigins = require('../config/allowedOrigins');
 const credentials = (req, res, next) => {
     const origin = req.headers.origin;

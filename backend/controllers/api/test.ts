@@ -1,5 +1,5 @@
 module.exports = {
-  homepage: (req: any, res: any) => {
+  homepage: (req, res) => {
     res.send('Hello Home Page!')
   },
 }

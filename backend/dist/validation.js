@@ -1,9 +1,9 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 //VALIDATION
 const Joi = require('@hapi/joi');
 //register validation
-const registerValidation = (data) => {
+const registerValidation;
+(data) => {
     const schema = {
         name: Joi.string().min(3).required(),
         email: Joi.string().min(6).required().email(),

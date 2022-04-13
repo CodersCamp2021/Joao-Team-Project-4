@@ -1,4 +1,3 @@
-export{};
 const mongoose = require('mongoose')
 
 const cinemaHallSchema = new mongoose.Schema({

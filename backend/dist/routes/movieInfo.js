@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const Movie = require('../model/Movie');
 const cors = require("cors");

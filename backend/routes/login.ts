@@ -1,4 +1,3 @@
-export {};
 const router = require('express').Router()
 const User = require('../model/User')
 const jwt = require('jsonwebtoken')
@@ -6,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const { loginValidation } = require('../validation')
 
 //LOGIN
-router.post('/', async (req: any, res: any) => {
+router.post('/', async (req, res) => {
 	//validate the data
 	const { error } = loginValidation(req.body)
 	if (error) return res.status(400).send(error.details[0].message)

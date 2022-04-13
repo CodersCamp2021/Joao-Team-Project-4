@@ -1,10 +1,9 @@
-export {};
 const router = require('express').Router()
 const User = require('../model/User')
 const ROLES_LIST = require('../config/roles_list')
 const verifyRoles = require('../middleware/verifyRoles')
 
-router.get('/', verifyRoles(ROLES_LIST.User), (req: any, res: any) => {
+router.get('/', verifyRoles(ROLES_LIST.User), (req, res) => {
 	res.json(req.user)
 	User.findOne({ user: req.user })
 })
