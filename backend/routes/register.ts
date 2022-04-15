@@ -1,7 +1,8 @@
-const router = require('express').Router()
-const User = require('../model/User')
-const bcrypt = require('bcryptjs')
-const { registerValidation } = require('../validation')
+import * as express from 'express'
+let router = express.Router()
+import User from '../model/User'
+import bcrypt from 'bcryptjs'
+import { registerValidation } from '../validation'
 
 //REGISTER
 router.post('/', async (req, res) => {
@@ -32,4 +33,4 @@ router.post('/', async (req, res) => {
 	}
 })
 
-module.exports = router
+export default router

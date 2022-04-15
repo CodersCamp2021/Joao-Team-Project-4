@@ -1,5 +1,6 @@
-const router = require('express').Router()
-const User = require('../model/User')
+import * as express from 'express'
+let router = express.Router()
+import User from '../model/User'
 
 //LOGOUT
 router.get('/', async (req, res) => {
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
 	if (!foundUser) {
 		res.clearCookie('jwt', {
 			httpOnly: true,
-			sameSite: 'None',
+			sameSite: 'none',
 			secure: true,
 		})
 		return res.sendStatus(204)
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
 
 	res.clearCookie('jwt', {
 		httpOnly: true,
-		sameSite: 'None',
+		sameSite: 'none',
 		secure: true,
 	})
 	res.sendStatus(204)
