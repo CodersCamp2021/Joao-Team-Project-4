@@ -1,28 +1,30 @@
-const route = require('express').Router()
-const Screening = require('../model/Screening')
-const Movie = require('../model/Movie')
-const Cinema = require('../model/Cinema')
-const verifyToken = require('../middleware/verifyToken')
-const verifyRoles = require('../middleware/verifyRoles')
-const ROLES_LIST = require('../config/roles_list')
-const mongoose = require('mongoose')
+import { Router } from 'express'
+import { Types, Error } from 'mongoose'
+import Screening from '../model/Screening'
+import Movie from '../model/Movie'
+import Cinema from '../model/Cinema'
+import verifyToken from '../middleware/verifyToken'
+import verifyRoles from '../middleware/verifyRoles'
+import ROLES_LIST from '../config/roles_list'
 
-const startOfDay = (date) => {
-    return(new Date(date - date.getTime() % (3600 * 1000 * 24)))
+import cors from 'cors'
+import corsOptions from '../config/corsOptions'
+
+const route = Router()
+
+const startOfDay = (date: Date) => {
+    return(new Date(date.getTime() - date.getTime() % (3600 * 1000 * 24)))
 }
 
-const endOfDay = (date) => {
-    return(new Date(date - date.getTime() % (3600 * 1000 * 24) + 86399999))
+const endOfDay = (date: Date) => {
+    return(new Date(date.getTime() - date.getTime() % (3600 * 1000 * 24) + 86399999))
 }
 
-const cors = require("cors");
-const corsOptions = require('../config/corsOptions');
-
-const stringToTimeTouple = (string) => {
+const stringToTimeTouple = (string: string) => {
     return string.slice(0,-1).split("h").map(e=>(e-0))
 }
 
-const checkOverlapping = (a_start, a_end, b_start, b_end) => {
+const checkOverlapping = (a_start: Date, a_end: Date, b_start: Date, b_end: Date) => {
     if (a_start <= b_start && b_start <= a_end) return true
     if (a_start <= b_end   && b_end   <= a_end) return true
     if (b_start <=  a_start && a_end   <=  b_end) return true
@@ -44,32 +46,41 @@ async (req, res) => {
     })
 
     
-    if(!mongoose.Types.ObjectId.isValid(req.body.cinemaId)) {
+    if(!Types.ObjectId.isValid(req.body.cinemaId)) {
         return res.status(400).send("Invalid cinema id")
     }
     
-    if(!mongoose.Types.ObjectId.isValid(req.body.cinemaHallId)) {
+    if(!Types.ObjectId.isValid(req.body.cinemaHallId)) {
         return res.status(400).send("Invalid cinema hall id")
     }
     
-    if(!mongoose.Types.ObjectId.isValid(req.body.movieId)) {
+    if(!Types.ObjectId.isValid(req.body.movieId)) {
         return res.status(400).send("Invalid movie id")
     }
     
     // Logic
 
-    const movie = await Movie.findById(mongoose.Types.ObjectId(req.body.movieId))
+    const movie = await Movie.findById(new Types.ObjectId(req.body.movieId))
+
+    if(!movie) {
+        return res.status(400).send("Movie not found")
+    }
+
     const [screeningHours, screeningMinutes] = stringToTimeTouple(movie.length)
     const screeningStart = await new Date(req.body.screeningDate)
     const screeningEnd = await new Date(screeningStart.getTime() + screeningHours * 1000*60*60 + screeningMinutes * 1000*60 )
 
-    const cinema = await Cinema.findById(mongoose.Types.ObjectId(req.body.cinemaId))
+    const cinema = await Cinema.findById(new Types.ObjectId(req.body.cinemaId))
+
+    if(!cinema) {
+        return res.status(400).send("Cinema not found")
+    }
 
     // Check if screening starts within cinema opening hours + boundaries
     
     if(screeningStart.getDay() == 1) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -79,8 +90,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 2) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -90,8 +101,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 3) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -101,8 +112,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 4) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -112,8 +123,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 5) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -123,8 +134,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 6) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -134,8 +145,8 @@ async (req, res) => {
     }
 
     if(screeningStart.getDay() == 0) {
-        const cinemaOpen = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
-        const cinemaClose = new Date(screeningStart - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
+        const cinemaOpen = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.start).getTime() + 900000)
+        const cinemaClose = new Date(screeningStart.getTime() - screeningStart.getTime() % (3600 * 1000 * 24) + new Date(cinema.openingHours.monday.end).getTime() - 900000)
         if(cinemaOpen > screeningStart) {
             return res.status(400).send("Too early start")
         }
@@ -147,7 +158,7 @@ async (req, res) => {
     // Checking integration with other screenings
 
     const screenings = await Screening.find({
-        cinemaHallId: mongoose.Types.ObjectId(req.body.cinemaHallId),
+        cinemaHallId: new Types.ObjectId(req.body.cinemaHallId),
         screeningDate: {
             $gte: startOfDay(screeningStart),
             $lte: endOfDay(screeningStart)
@@ -155,13 +166,18 @@ async (req, res) => {
     })
 
     for(const _screening of screenings) {
-        const _movie = await Movie.findById(mongoose.Types.ObjectId(_screening.movieId))
+        const _movie = await Movie.findById(new Types.ObjectId(_screening.movieId))
+        
+        if(!_movie) {
+            return res.status(400).send("Movie not found")
+        }
+
         const [_screeningHours, _screeningMinutes] = stringToTimeTouple(_movie.length)
         const _screeningStart = new Date(_screening.screeningDate)
         const _screeningEnd = new Date(_screeningStart.getTime() + _screeningHours * 1000*60*60 + _screeningMinutes * 1000*60 )
         
         // Check if there's break after screening
-        const endDiff = screeningStart - _screeningEnd
+        const endDiff = screeningStart.getTime() - _screeningEnd.getTime()
         console.log(_movie.length)
         if(endDiff > 0 && endDiff < 900000) {
             return res.status(400).send("Bad request - there has to be a 15 minute break before next screening")
@@ -178,7 +194,7 @@ async (req, res) => {
         return res.status(201).json({savedScreening})
     } catch (e) {
         console.error('server error - /screening POST')
-        return res.status(500).send/('Error while saving cinema hall.')
+        return res.status(500).send('Error while saving cinema hall.')
     }
 })
 
@@ -186,8 +202,8 @@ route.delete('/screening/:screeningId', cors(corsOptions),
 verifyToken, verifyRoles(ROLES_LIST.Admin), 
 async (req, res) => {
     Screening.findByIdAndDelete(
-		mongoose.Types.ObjectId(req.params.screeningId),
-		(err, docs) => {
+		new Types.ObjectId(req.params.screeningId),
+		(err: Error, docs: typeof Screening) => {
 			if (err) {
 				console.error(err)
 				return res
@@ -204,7 +220,7 @@ async (req, res) => {
     const day = new Date(req.params.screeningDate)
 
     Screening.find({
-		    cinemaHallId: mongoose.Types.ObjectId(req.params.cinemaHallId),
+		    cinemaHallId: new Types.ObjectId(req.params.cinemaHallId),
             screeningDate: {
                 $gte: startOfDay(day), 
                 $lte: endOfDay(day)
@@ -227,9 +243,9 @@ async (req, res) => {
 route.get('/screenings/movie/:movieId', cors(corsOptions), 
 async (req, res) => {
     Screening.find({
-		    movieId: mongoose.Types.ObjectId(req.params.movieId),
+		    movieId: new Types.ObjectId(req.params.movieId),
         },
-		(err, docs) => {
+		(err: Error, docs: typeof Screening) => {
 			if (err) {
 				console.error(err)
 				return res
@@ -241,4 +257,4 @@ async (req, res) => {
 	)
 })
 
-module.exports = route
+export default route

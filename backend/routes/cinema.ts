@@ -1,12 +1,14 @@
-const route = require('express').Router()
-const Cinema = require('../model/Cinema')
-const verifyToken = require('../middleware/verifyToken')
-const verifyRoles = require('../middleware/verifyRoles')
-const ROLES_LIST = require('../config/roles_list')
-const mongoose = require('mongoose')
+import { Router } from 'express'
+import { Types, Error } from 'mongoose'
+import Cinema from '../model/Cinema'
+import verifyToken from '../middleware/verifyToken'
+import verifyRoles from '../middleware/verifyRoles'
+import ROLES_LIST from '../config/roles_list'
 
-const cors = require("cors");
-const corsOptions = require('../config/corsOptions');
+import cors from 'cors'
+import corsOptions from '../config/corsOptions'
+
+const route = Router()
 
 route.use(cors(corsOptions));
 
@@ -57,7 +59,7 @@ route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Adm
 })
 
 route.get('/cinemas', async (req, res) => {
-	Cinema.find({}, (err, docs) => {
+	Cinema.find({}, (err: Error, docs: typeof Cinema) => {
 		if (err) {
 			return res.status(500).send('server error - /cinemas GET')
 		}
@@ -83,8 +85,8 @@ route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admi
 
 route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), async (req, res) => {
 	Cinema.findByIdAndDelete(
-		mongoose.Types.ObjectId(req.params.id),
-		(err, docs) => {
+		new Types.ObjectId(req.params.id),
+		(err: Error, docs: typeof Cinema) => {
 			if (err) {
 				console.error(err)
 				return res
@@ -96,4 +98,4 @@ route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LI
 	)
 })
 
-module.exports = route
+export default route
