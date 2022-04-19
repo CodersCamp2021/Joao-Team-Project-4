@@ -1,16 +1,24 @@
-const mongoose = require('mongoose')
+import { Schema, Document, model, Model, Types }  from "mongoose"
 
-const screeningSchema = new mongoose.Schema({
+interface IScreening extends Document {
+    cinemaId: Types.ObjectId,
+    cinemaHallId: Types.ObjectId,
+    movieId: Types.ObjectId,
+    screeningDate: Date,
+    reservedSeats: []
+}
+
+const ScreeningSchema : Schema = new Schema({
     cinemaId: {
-        type: mongoose.ObjectId,
+        type: Types.ObjectId,
         required: true
     },
     cinemaHallId: {
-        type: mongoose.ObjectId,
+        type: Types.ObjectId,
         required: true
     },
     movieId: {
-        type: mongoose.ObjectId,
+        type: Types.ObjectId,
         required: true
     },
     screeningDate: {
@@ -23,4 +31,6 @@ const screeningSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Screening', screeningSchema)
+const Screening : Model<IScreening> = model('Screening', ScreeningSchema)
+
+export default Screening

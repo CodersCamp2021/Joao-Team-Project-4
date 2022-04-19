@@ -1,6 +1,42 @@
-const mongoose = require('mongoose')
+import { Schema, Document, model, Model }  from "mongoose"
 
-const cinemaSechema = new mongoose.Schema({
+interface ICinema extends Document {
+    country: string,
+    city: string,
+    adress: string,
+    openingHours: {
+        monday: {
+            start: Date,
+            end: Date
+        },
+        tuesday: {
+            start: Date,
+            end: Date
+        },
+        wednesday: {
+            start: Date,
+            end: Date
+        },
+        thursday: {
+            start: Date,
+            end: Date
+        },
+        friday: {
+            start: Date,
+            end: Date
+        },
+        saturday: {
+            start: Date,
+            end: Date
+        },
+        sunday: {
+            start: Date,
+            end: Date
+        },
+    }
+}
+
+const CinemaSchema : Schema = new Schema({
     country: {
         type: String,
         required: true,
@@ -51,4 +87,6 @@ const cinemaSechema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Cinema', cinemaSechema)
+const Cinema: Model<ICinema> = model('Cinema', CinemaSchema)
+
+export default Cinema

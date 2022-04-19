@@ -1,14 +1,14 @@
 import { model, Schema, Model, Document } from 'mongoose';
 
 interface IMovie extends Document {
-    title: String,
-    year: Number,
-    director: String,
-    genres: [String],
-    description: String,
-    poster: String,
-    length: String,
-    stars: [String],
+    title: string,
+    year: number,
+    director: string,
+    genres: [string],
+    description: string,
+    poster: string,
+    length: string,
+    stars: [string],
   }
   
 const MovieSchema: Schema = new Schema({

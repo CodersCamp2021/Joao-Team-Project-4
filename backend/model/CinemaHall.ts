@@ -1,8 +1,15 @@
-const mongoose = require('mongoose')
+import { Schema, Document, model, Model, Types }  from "mongoose"
 
-const cinemaHallSchema = new mongoose.Schema({
+interface ICinemaHall extends Document {
+    cinemaId: Types.ObjectId,
+    rows: number,
+    cols: number,
+    name: string,
+}
+
+const CinemaHallSchema : Schema = new Schema({
     cinemaId: {
-        type: mongoose.ObjectId,
+        type: Types.ObjectId,
         required: true
     },
     rows: {
@@ -33,4 +40,6 @@ const cinemaHallSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('CinemaHall', cinemaHallSchema)
+const CinemaHall: Model<ICinemaHall>  = model('CinemaHall', CinemaHallSchema)
+
+export default CinemaHall
