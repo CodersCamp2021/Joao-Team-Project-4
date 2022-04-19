@@ -42,7 +42,7 @@ route.post('/cinema-hall', verifyToken, verifyRoles(ROLES_LIST.Admin), async (re
 route.get('/cinema-halls/:cinemaId', async (req, res) => {
     const _cinemaId = req.params.cinemaId
 
-    if(!mongoose.Types.ObjectId.isValid(_cinemaId)) {
+    if(!Types.ObjectId.isValid(_cinemaId)) {
         return res.status(400).send("Invalid cinema id")
     }
     CinemaHall.find({
@@ -58,7 +58,7 @@ route.get('/cinema-halls/:cinemaId', async (req, res) => {
 route.get('/cinema-hall/:cinemaHallId', async (req, res) => {
     const _cinemaHallId = req.params.cinemaHallId
 
-    if(!mongoose.Types.ObjectId.isValid(_cinemaHallId)) {
+    if(!Types.ObjectId.isValid(_cinemaHallId)) {
         return res.status(400).send("Invalid cinema id")
     }
     CinemaHall.findById({

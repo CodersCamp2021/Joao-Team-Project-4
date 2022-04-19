@@ -21,7 +21,7 @@ const endOfDay = (date: Date) => {
 }
 
 const stringToTimeTouple = (string: string) => {
-    return string.slice(0,-1).split("h").map(e=>(e-0))
+    return string.slice(0,-1).split("h").map(e=>(parseInt(e)))
 }
 
 const checkOverlapping = (a_start: Date, a_end: Date, b_start: Date, b_end: Date) => {

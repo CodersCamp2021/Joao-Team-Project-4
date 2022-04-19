@@ -9,7 +9,7 @@ interface ICinemaHall extends Document {
 
 const CinemaHallSchema : Schema = new Schema({
     cinemaId: {
-        type: mongoose.Types.ObjectId,
+        type: Types.ObjectId,
         required: true
     },
     rows: {
