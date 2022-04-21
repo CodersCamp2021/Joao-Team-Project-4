@@ -1,8 +1,9 @@
 "use strict";
-const mongoose = require('mongoose');
-const cinemaHallSchema = new mongoose.Schema({
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const CinemaHallSchema = new mongoose_1.Schema({
     cinemaId: {
-        type: mongoose.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         required: true
     },
     rows: {
@@ -32,4 +33,5 @@ const cinemaHallSchema = new mongoose.Schema({
         max: 255
     }
 });
-module.exports = mongoose.model('CinemaHall', cinemaHallSchema);
+const CinemaHall = (0, mongoose_1.model)('CinemaHall', CinemaHallSchema);
+exports.default = CinemaHall;

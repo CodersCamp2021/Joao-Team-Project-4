@@ -1,16 +1,17 @@
 "use strict";
-const mongoose = require('mongoose');
-const screeningSchema = new mongoose.Schema({
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const ScreeningSchema = new mongoose_1.Schema({
     cinemaId: {
-        type: mongoose.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         required: true
     },
     cinemaHallId: {
-        type: mongoose.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         required: true
     },
     movieId: {
-        type: mongoose.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         required: true
     },
     screeningDate: {
@@ -22,4 +23,5 @@ const screeningSchema = new mongoose.Schema({
         required: true
     }
 });
-module.exports = mongoose.model('Screening', screeningSchema);
+const Screening = (0, mongoose_1.model)('Screening', ScreeningSchema);
+exports.default = Screening;

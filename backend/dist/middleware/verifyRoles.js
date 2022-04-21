@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const verifyRoles = (...allowedRoles) => {
     return (req, res, next) => {
         if (!(req === null || req === void 0 ? void 0 : req.roles))
@@ -14,4 +15,4 @@ const verifyRoles = (...allowedRoles) => {
         next();
     };
 };
-module.exports = verifyRoles;
+exports.default = verifyRoles;

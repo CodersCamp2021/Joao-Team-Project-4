@@ -1,7 +1,8 @@
-const User = require('../../../model/User')
 
-module.exports = function (req, res, next) {
-    User.findById(req.user._id, (err, user) => {
+import User from '../../../model/User'
+
+module.exports = function (req: any , res: any, next: any) {
+    User.findById(req.user._id, (err: any, user: any) => {
         if(err) {
             return res.status(500).send("Server error.")  
         }

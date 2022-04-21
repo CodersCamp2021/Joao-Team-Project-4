@@ -29,9 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 let router = express.Router();
 const User_1 = __importDefault(require("../model/User"));
-const ROLES_LIST = require('../config/roles_list');
-const verifyRoles = require('../middleware/verifyRoles');
-router.get('/', verifyRoles(ROLES_LIST.Admin), (req, res) => {
+const roles_list_1 = __importDefault(require("../config/roles_list"));
+const verifyRoles_1 = __importDefault(require("../middleware/verifyRoles"));
+router.get('/', (0, verifyRoles_1.default)(roles_list_1.default.Admin), (req, res) => {
     res.json(req.user);
     User_1.default.findOne({ user: req.user });
 });

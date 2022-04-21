@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginValidation = exports.registerValidation = void 0;
-//VALIDATION
 const Joi = require('@hapi/joi');
 //register validation
 const registerValidation = (data) => {

@@ -38,12 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 let router = express.Router();
 const User_1 = __importDefault(require("../model/User"));
-const bcrypt = require('bcryptjs');
-const { registerValidation } = require('../validation');
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const validation_1 = require("../validation");
 //REGISTER
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //validate the data
-    const { error } = registerValidation(req.body);
+    const { error } = (0, validation_1.registerValidation)(req.body);
     if (error)
         return res.status(400).send(error.details[0].message);
     //check if the user is already in the db
@@ -51,8 +51,8 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (emailExist)
         return res.status(400).send({ message: 'Email already exist' });
     //hash password
-    const salt = yield bcrypt.genSalt(10);
-    const hashedPassword = yield bcrypt.hash(req.body.password, salt);
+    const salt = yield bcryptjs_1.default.genSalt(10);
+    const hashedPassword = yield bcryptjs_1.default.hash(req.body.password, salt);
     //create a new user
     const user = new User_1.default({
         name: req.body.name,
@@ -68,4 +68,4 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(404).send(err);
     }
 }));
-module.exports = router;
+exports.default = router;

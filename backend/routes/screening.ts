@@ -215,7 +215,7 @@ async (req, res) => {
 	)
 })
 
-route.get('/screenings/hall/:cinemaHallId/:screeningDate', cors(corsOptions),
+route.get('/screenings/hall/:cinemaHallId/:screeningDate',
 async (req, res) => {
     const day = new Date(req.params.screeningDate)
 
@@ -240,7 +240,7 @@ async (req, res) => {
 	)
 })
 
-route.get('/screenings/movie/:movieId', cors(corsOptions), 
+route.get('/screenings/movie/:movieId', 
 async (req, res) => {
     Screening.find({
 		    movieId: new Types.ObjectId(req.params.movieId),

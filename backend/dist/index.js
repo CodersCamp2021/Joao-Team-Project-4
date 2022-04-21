@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
 const path = require('path');
-const express = require('express');
-const app = express();
+//const express = require('express')
+const app = (0, express_1.default)();
 const { port } = require('./config');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
@@ -27,8 +32,8 @@ require('./db/mongoose');
 //middlewares
 app.use(credentials);
 app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express_1.default.urlencoded({ extended: false }));
+app.use(express_1.default.json());
 app.use(cookieParser());
 //route middlewares
 app.use('/', apiRouter);

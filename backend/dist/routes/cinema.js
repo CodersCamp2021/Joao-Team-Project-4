@@ -8,17 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const route = require('express').Router();
-const Cinema = require('../model/Cinema');
-const verifyToken = require('../middleware/verifyToken');
-const verifyRoles = require('../middleware/verifyRoles');
-const ROLES_LIST = require('../config/roles_list');
-const mongoose = require('mongoose');
-const cors = require("cors");
-const corsOptions = require('../config/corsOptions');
-route.use(cors(corsOptions));
-route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cinema = new Cinema({
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const mongoose_1 = require("mongoose");
+const Cinema_1 = __importDefault(require("../model/Cinema"));
+const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
+const verifyRoles_1 = __importDefault(require("../middleware/verifyRoles"));
+const roles_list_1 = __importDefault(require("../config/roles_list"));
+const cors_1 = __importDefault(require("cors"));
+const corsOptions_1 = __importDefault(require("../config/corsOptions"));
+const route = (0, express_1.Router)();
+route.use((0, cors_1.default)(corsOptions_1.default));
+route.post('/cinema', (0, cors_1.default)(corsOptions_1.default), verifyToken_1.default, (0, verifyRoles_1.default)(roles_list_1.default.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const cinema = new Cinema_1.default({
         country: req.body.country,
         city: req.body.city,
         adress: req.body.adress,
@@ -63,15 +68,15 @@ route.post('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Adm
     }
 }));
 route.get('/cinemas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    Cinema.find({}, (err, docs) => {
+    Cinema_1.default.find({}, (err, docs) => {
         if (err) {
             return res.status(500).send('server error - /cinemas GET');
         }
         return res.status(200).send(docs);
     });
 }));
-route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    Cinema.findByIdAndUpdate(req.body.id, Object.assign({}, req.body.newCinema), { new: true }, (err, docs) => {
+route.put('/cinema', (0, cors_1.default)(corsOptions_1.default), verifyToken_1.default, (0, verifyRoles_1.default)(roles_list_1.default.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    Cinema_1.default.findByIdAndUpdate(req.body.id, Object.assign({}, req.body.newCinema), { new: true }, (err, docs) => {
         if (err) {
             return res
                 .status(400)
@@ -80,8 +85,8 @@ route.put('/cinema', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admi
         return res.status(200).send(docs);
     });
 }));
-route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LIST.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    Cinema.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id), (err, docs) => {
+route.delete('/cinema/:id', (0, cors_1.default)(corsOptions_1.default), verifyToken_1.default, (0, verifyRoles_1.default)(roles_list_1.default.Admin), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    Cinema_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(req.params.id), (err, docs) => {
         if (err) {
             console.error(err);
             return res
@@ -91,4 +96,4 @@ route.delete('/cinema/:id', cors(corsOptions), verifyToken, verifyRoles(ROLES_LI
         return res.status(200).send(docs);
     });
 }));
-module.exports = route;
+exports.default = route;
