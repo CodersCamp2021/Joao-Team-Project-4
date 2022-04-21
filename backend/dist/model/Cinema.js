@@ -1,6 +1,7 @@
 "use strict";
-const mongoose = require('mongoose');
-const cinemaSechema = new mongoose.Schema({
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const CinemaSchema = new mongoose_1.Schema({
     country: {
         type: String,
         required: true,
@@ -50,4 +51,5 @@ const cinemaSechema = new mongoose.Schema({
         },
     }
 });
-module.exports = mongoose.model('Cinema', cinemaSechema);
+const Cinema = (0, mongoose_1.model)('Cinema', CinemaSchema);
+exports.default = Cinema;

@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const User = require('../model/User');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const User_1 = __importDefault(require("../model/User"));
 module.exports = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield User.findOne({ email: req.body.email });
+    const user = yield User_1.default.findOne({ email: req.body.email });
     if (user.roles.Admin !== 'Admin')
         res.status(400).send('Access Denied');
     try {
