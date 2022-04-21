@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Carousel } from 'primereact/carousel';
 import '../../styles/CarouselDemo.css'
 import { Link } from 'react-router-dom';
+import { Movie } from "../../types/Movie"
 
 const UpcomingMovies = () => {
-    const [movies, setMovies] = useState([]);
+    const [movies, setMovies] = useState<Movie[]>();
 
     const responsiveOptions = [
         {
@@ -24,19 +25,22 @@ const UpcomingMovies = () => {
         }
     ];
 
-    useEffect(async () => {
-        await fetch('http://localhost:3000/upcoming')
-            .then(res => res.json())
-            .then(data => setMovies(data));
+    useEffect(() => {
+        async function fetchMovies() {
+            await fetch('http://localhost:3000/upcoming')
+                .then(res => res.json())
+                .then(data => setMovies(data));
+        }
+        fetchMovies();
     }, []);
 
-    const movieTemplate = (movie) => {
+    const movieTemplate = (movie: Movie) => {
         return (
             <div className="movie-item">
                 <div className="movie-item-content">
                     <div className="mb-3">
                         <Link to={`/movie/${movie._id}`}>
-                            <img src={`${movie.poster}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
+                            <img src={`${movie.poster}`} onError={(e) => (e.target as HTMLImageElement).src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
                         </Link>
                     </div>
                     <div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import "../../styles/MovieInfo.css"
+import { Movie } from "../../types/Movie"
 
 const MovieInfo = () => {
 
-    let emptyMovie = {
+    let emptyMovie : Movie = {
+        _id: '',
         title: '',
-        year: 0,
+        year: 2022,
         director: '',
         genres: [''],
         description: '',
@@ -15,19 +17,18 @@ const MovieInfo = () => {
         stars: ['']
     };
 
-    const [movie, setMovie] = useState(emptyMovie);
+    const [movie, setMovie] = useState<Movie>(emptyMovie);
     const { id } = useParams()
 
-    useEffect(async () => {
-
-        await fetch(`http://localhost:3000/movie/${id}`)
+    useEffect(() => {
+         fetch(`http://localhost:3000/movie/${id}`)
             .then(response => response.json())
             .then(data => setMovie(data));
     }, []);
 
     return (
         <div className="m-container">
-            <img src={`${movie.poster}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
+            <img src={`${movie.poster}`} onError={(e) => (e.target as HTMLImageElement).src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
             <div className='m-details'>
                 <h1 className='m-title'>{movie.title}</h1>
                 <div className='m-time'> <strong>{movie.year} </strong> / {movie.length}</div>
