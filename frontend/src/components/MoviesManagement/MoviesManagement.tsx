@@ -9,15 +9,17 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Checkbox } from 'primereact/checkbox';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
+import { InputText,  } from 'primereact/inputtext';
 import { Link, useNavigate } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { Movie } from "../../types/Movie"
 
 import '../../styles/MoviesTable.css';
 
+
 const MoviesTable = () => {
 
-    let emptyMovie = {
+    let emptyMovie : Movie = {
         _id: '',
         title: '',
         year: 2022,
@@ -26,27 +28,31 @@ const MoviesTable = () => {
         description: '',
         poster: '',
         length: '0h00m',
-        stars: ''
+        stars: ['']
     };
 
-    const [movies, setMovies] = useState(null);
+    const [movies, setMovies] = useState<Movie[]>([]);
     const [movieDialog, setMovieDialog] = useState(false);
     const [deleteMovieDialog, setDeleteMovieDialog] = useState(false);
-    const [movie, setMovie] = useState(emptyMovie);
+    const [movie, setMovie] = useState<Movie>(emptyMovie);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
-    const [genres, setGenres] = useState([]);
+    const [genres, setGenres] = useState(['']);
     const [movieChange, setMovieChange] = useState(0);
-    const toast = useRef(null);
+    const toast = useRef<any>(null);
     const dt = useRef(null);
 
-
+    const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
 
-    useEffect(async () => {
-        await axiosPrivate.get('http://localhost:3000/movies')
+
+    useEffect( () => {
+        async function fetchMovies () {
+            await axiosPrivate.get('http://localhost:3000/movies')
             .then(response => response.data)
             .then(data => setMovies(data));
+        }
+        fetchMovies();
     }, [movieChange]);
 
 
@@ -68,10 +74,8 @@ const MoviesTable = () => {
     const saveMovie = async () => {
         setSubmitted(true);
 
-        let _movies = [...movies];
-        let _movie = { ...movie };
-
-        _movie['stars'] = _movie['stars'] == '' ? '' : _movie['stars'].split(', ')
+        let _movies = Array.from(movies);
+        let _movie = {...movie};
 
         await axiosPrivate.post('http://localhost:3000/movies/new', _movie, {
             headers: {
@@ -96,7 +100,7 @@ const MoviesTable = () => {
         setMovies(_movies);
         setMovieDialog(false);
         setMovie(emptyMovie);
-        setGenres([]);
+        setGenres(['']);
         setMovieChange(movieChange + 1);
     }
 
@@ -117,7 +121,7 @@ const MoviesTable = () => {
                 console.error(error);
                 toast.current.show({ severity: 'error', summary: 'Error', detail: `Could not delete movie! ${error.toString()}`, life: 3000 });
             });
-        const _movies = movies.filter(val => val.id !== movie._id);
+        const _movies = movies.filter(val => val._id !== movie._id);
 
         setDeleteMovieDialog(false);
         setMovies(_movies);
@@ -125,7 +129,7 @@ const MoviesTable = () => {
         setMovieChange(movieChange - 1)
     }
 
-    const onGenreChange = (e) => {
+    const onGenreChange = (e: any) => {
         let selectedGenres = [...genres];
         if (e.checked)
             selectedGenres.push(e.value);
@@ -137,18 +141,31 @@ const MoviesTable = () => {
         setMovie(_movie);
     }
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
+    const onStarsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const val : string = (e.target && e.target.value) || '';
         let _movie = { ...movie };
-        _movie[`${name}`] = val;
 
+        if (val.includes(', ')){
+            _movie['stars'] = val.split(', ');
+        }
+        else {
+            _movie['stars'][0]= val;
+        }
         setMovie(_movie);
     }
 
-    const onInputNumberChange = (e, name) => {
+    const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: keyof Movie) => {
+        const val : string = (e.target && e.target.value) || '';
+        let _movie = { ...movie };
+        (_movie as any)[`${name}`] = val;
+      
+        setMovie(_movie);
+    }
+
+    const onInputNumberChange = (e: any, name: keyof Movie) => {
         const val = e.value || 0;
         let _movie = { ...movie };
-        _movie[`${name}`] = val;
+        (_movie as any)[`${name}`] = val;
 
         setMovie(_movie);
     }
@@ -161,12 +178,12 @@ const MoviesTable = () => {
         )
     }
 
-    const confirmDeleteMovie = (movie) => {
+    const confirmDeleteMovie = (movie: Movie) => {
         setMovie(movie);
         setDeleteMovieDialog(true);
     }
 
-    const actionBodyTemplate = (rowData) => {
+    const actionBodyTemplate = (rowData: Movie) => {
         return (
             <React.Fragment>
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteMovie(rowData)} />
@@ -174,16 +191,16 @@ const MoviesTable = () => {
         );
     }
 
-    const showInfoBodyTemplate = (movie) => {
+    const showInfoBodyTemplate = (movie: Movie) => {
         return (
             <Link to={`/movie/${movie._id}`}>
-                <Button icon="pi pi-search" className="p-button-rounded p-button-info" onClick={() => useNavigate(`/movie/${movie._id}`)} />
+                <Button icon="pi pi-search" className="p-button-rounded p-button-info" onClick={() => navigate(`/movie/${movie._id}`)} />
             </Link>
         );
     }
 
-    const posterBodyTemplate = (movie) => {
-        return <img src={`${movie.poster}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
+    const posterBodyTemplate = (movie : Movie) => {
+        return <img src={`${movie.poster}`} onError={(e) => (e.target as HTMLImageElement).src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.title} className="poster" />
     }
 
     const header = (
@@ -191,7 +208,7 @@ const MoviesTable = () => {
             <h5 className="table-title">MOVIES IN THE COLLECTION</h5>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target as any)} placeholder="Search..." />
             </span>
         </div>
     );
@@ -218,7 +235,7 @@ const MoviesTable = () => {
                 <DataTable ref={dt} value={movies} dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} movies"
-                    globalFilter={globalFilter} header={header} responsiveLayout="scroll" rowKey={movie._id}>
+                    globalFilter={globalFilter} header={header} responsiveLayout="scroll">
 
                     <Column body={showInfoBodyTemplate} exportable={false}></Column>
                     <Column field="title" header="Title" sortable style={{ minWidth: '16rem' }}></Column>
@@ -231,7 +248,6 @@ const MoviesTable = () => {
             </div>
 
             <Dialog visible={movieDialog} style={{ width: '450px' }} header="Movies Details" modal className="p-fluid" footer={movieDialogFooter} onHide={hideDialog}>
-                {movie.image && <img src={`images/product/${movie.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={movie.image} className="poster block m-auto pb-3" />}
                 <div className="field">
                     <label htmlFor="title">Title</label>
                     <InputText id="title" value={movie.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus className={classNames({ 'p-invalid': submitted && !movie.title })} />
@@ -302,13 +318,13 @@ const MoviesTable = () => {
                     </div>
                     <div className="field col">
                         <label htmlFor="stars">Stars</label>
-                        <InputTextarea id="stars" value={movie.stars} onChange={(e) => onInputChange(e, 'stars')} />
+                        <InputTextarea id="stars" value={movie.stars} onChange={(e) => onStarsChange(e)} />
                     </div>
                 </div>
                 <div className="formgrid grid">
                     <div className="field col">
                         <label htmlFor="year">Year</label>
-                        <InputNumber id="year" value={movie.year} onValueChange={(e) => onInputNumberChange(e, 'year')} integeronly />
+                        <InputNumber id="year" value={movie.year} onValueChange={(e) => onInputNumberChange(e, 'year')} mode="decimal" />
                     </div>
                     <div className="field col">
                         <label htmlFor="length">Length</label>
@@ -326,7 +342,7 @@ const MoviesTable = () => {
             <Dialog visible={deleteMovieDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteMovieDialogFooter} onHide={hideDeleteMovieDialog}>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {movie && <span>Are you sure you want to delete <b>{movie.name}</b>?</span>}
+                    {movie && <span>Are you sure you want to delete <b>{movie.title}</b>?</span>}
                 </div>
             </Dialog>
         </div>
