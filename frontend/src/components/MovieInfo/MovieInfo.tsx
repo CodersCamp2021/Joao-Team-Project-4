@@ -6,7 +6,6 @@ import { Movie } from "../../types/Movie"
 const MovieInfo = () => {
 
     let emptyMovie : Movie = {
-        _id: '',
         title: '',
         year: 2022,
         director: '',
